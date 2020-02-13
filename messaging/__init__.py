@@ -1,6 +1,26 @@
 # must be build with scons
-from .messaging_pyx import Context, Poller, SubSocket, PubSocket  # pylint: disable=no-name-in-module, import-error
-from .messaging_pyx import MultiplePublishersError, MessagingError  # pylint: disable=no-name-in-module, import-error
+import platform
+import os
+
+if platform.python_implementation() == 'PyPy':
+  import cppyy
+  base_dir = os.path.dirname(os.path.abspath(__file__))
+  cppyy.include(os.path.join(base_dir, 'impl_msgq.hpp'))
+  cppyy.load_library(os.path.join(base_dir, 'messaging_pyx.so'))
+  from cppyy.gbl import MSGQContext as Context  # pylint: disable=no-name-in-module, import-error
+  from cppyy.gbl import MSGQPoller as Poller  # pylint: disable=no-name-in-module, import-error
+  from cppyy.gbl import MSGQSubSocket as SubSocket  # pylint: disable=no-name-in-module, import-error
+  from cppyy.gbl import MSGQPubSocket as PubSocket  # pylint: disable=no-name-in-module, import-error
+  class MessagingError(Exception):
+    pass
+
+  # TODO: raise the error for PyPy.
+  class MultiplePublishersError(MessagingError):
+    pass
+else:
+  from .messaging_pyx import Context, Poller, SubSocket, PubSocket  # pylint: disable=no-name-in-module, import-error
+  from .messaging_pyx import MultiplePublishersError, MessagingError  # pylint: disable=no-name-in-module, import-error
+
 import capnp
 
 assert MultiplePublishersError
