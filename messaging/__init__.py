@@ -6,7 +6,7 @@ if platform.python_implementation() == 'PyPy':
   import cppyy
   base_dir = os.path.dirname(os.path.abspath(__file__))
   cppyy.include(os.path.join(base_dir, 'impl_msgq.hpp'))
-  cppyy.load_library(os.path.join(base_dir, 'messaging_pyx.so'))
+  cppyy.load_library(os.path.join(base_dir, '..', 'libmessaging_shared.so'))
   from cppyy.gbl import MSGQContext as Context  # pylint: disable=no-name-in-module, import-error
   from cppyy.gbl import MSGQPoller as Poller  # pylint: disable=no-name-in-module, import-error
   from cppyy.gbl import MSGQSubSocket as SubSocket  # pylint: disable=no-name-in-module, import-error
