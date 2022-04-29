@@ -49,7 +49,7 @@ vipc_sources = [
   'visionipc/visionbuf.cc',
 ]
 
-if arch == "larch64":
+if arch in ["aarch64", "larch64"]:
   vipc_sources += ['visionipc/visionbuf_ion.cc']
 else:
   vipc_sources += ['visionipc/visionbuf_cl.cc']
